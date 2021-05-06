@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>小雪的专属感情测验</title>
+
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	</head>
+	<style type="text/css">
+		* {
+			margin: 0;
+		}
+
+
+
+		.title {
+			font-size: 50px;
+			text-align: center;
+			font-family: 微软雅黑;
+			margin: 30px 0 50px 0;
+		}
+
+		.content {
+			text-align: center;
+			display: flex;
+			justify-content: space-around;
+			margin: 10px 40px;
+
+		}
+
+		.content .want-it {
+			background-color: cadetblue;
+			color: #fff;
+			width: 260px;
+			height: 80px;
+			line-height: 80px;
+			border-radius: 12px;
+			align-self: center;
+			align-items: center;
+			font-size: 32px;
+		}
+
+		.content .avt {
+			background-color: cornflowerblue;
+			color: #fff;
+			width: 260px;
+			height: 80px;
+			line-height: 80px;
+			border-radius: 12px;
+			align-self: center;
+			align-items: center;
+			font-size: 32px;
+		}
+
+		.content>div:active {
+			opacity: 0.4;
+		}
+
+		.sub {
+			margin: 30px;
+			font-size: 28px;
+			box-shadow: 0px 6px 10px 0px rgba(60, 128, 209, 0.09);
+			padding: 30px;
+			color: #999;
+		}
+
+		.reset {
+			text-align: center;
+		}
+
+		.self-button {
+			width: 360px;
+			height: 120px;
+			line-height: 120px;
+			background-color: coral;
+			font-size: 32px;
+			color: #FFFFFF;
+			border: 0;
+			border-radius: 12px;
+			margin-top: 30px;
+
+		}
+
+		.self-button:active {
+			opacity: 0.4;
+		}
+
+		.sub-content * {
+			font-size: 32px;
+		}
+
+		.sub-content {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			margin-top: 30px;
+			color: #5F9EA0;
+		}
+
+		.sub-content label {
+			margin-bottom: 20px;
+			margin-top: 20px;
+			margin-right: 20px;
+		}
+
+		.img1 {
+			margin-top: 20px;
+			width: 300px;
+			height: 240px;
+			border-radius: 10px;
+		}
+
+		.sub-btn {
+			text-align: center;
+			margin: 40px 0;
+		}
+
+		.rule,
+		.show-content {
+			margin: 20px 40px;
+			padding: 30px;
+			font-size: 24px;
+		}
+	</style>
+	<body>
+		<div id="app">
+			<div class="title">
+				选择你想参与的游戏
+			</div>
+			<div class="content">
+				<div class="want-it" @click="choose(1)">要选择的</div>
+				<div class="avt" @click="choose(2)">想冒险的</div>
+			</div>
+			<div v-if="type==1">
+				<div class="sub">
+					<div class="sub-title">
+						1、心中理想的男朋友如果一定需要丢弃一样东西， 你选择是？
+					</div>
+					<div class="sub-content">
+						<el-radio-group v-model="subOne" @change="setOne">
+							<el-radio :label="1">拍照摄影</el-radio>
+							<el-radio :label="2">颜值</el-radio>
+							<el-radio :label="3">身高</el-radio>
+							<el-radio :label="4">**技术</el-radio>
+						</el-radio-group>
+					</div>
+				</div>
+				<div class="sub">
+					<div class="sub-title">
+						2、希望男朋友在公众场合怎么称呼你呢？
+					</div>
+					<div class="sub-content">
+						<el-radio-group v-model="subTwo" @change="setTwo">
+							<el-radio :label="1">小雪</el-radio>
+							<el-radio :label="2">小琴</el-radio>
+							<el-radio :label="3">宝贝</el-radio>
+							<el-radio :label="4">亲爱的</el-radio>
+						</el-radio-group>
+					</div>
+				</div>
+				<div class="sub">
+					<div class="sub-title">
+						3、男朋友想懒一下，你会？
+					</div>
+					<div class="sub-content">
+						<el-radio-group v-model="subThree" @change="setThree">
+							<el-radio :label="1">关心一下</el-radio>
+							<el-radio :label="2">揍一顿</el-radio>
+							<el-radio :label="3">斥责一顿</el-radio>
+							<el-radio :label="4">随便他</el-radio>
+						</el-radio-group>
+					</div>
+				</div>
+				<div class="sub">
+					<div class="sub-title">
+						4、你知道吗，你做了一件十分出格的事(先回忆反思，然后点击图片查看)
+
+					</div>
+					<div class="sub-content">
+						<img src="./img/img1.jpg" class="img1" v-if="showFour" @click="setFour" />
+						<div v-else>明明是领队团游而已，却擅自领走了我的心思。
+							你说说该怎么负责吧？
+						</div>
+					</div>
+				</div>
+				<div class="reset">
+					<button type="button" class="self-button" @click="reset1">重来一次</button>
+				</div>
+
+
+			</div>
+			<div v-else-if="type==2">
+				<div class="rule">
+					规则：随机出现0~1的一个数,如果大于等于5，你只能有一个操作，然后请按提示继续。
+				</div>
+				<div class="sub-btn">
+					<el-button type="primary" @click="showNum">点击冒险</el-button>
+				</div>
+				<div class="show-content">
+					<div id="num-area">
+						{{num}}
+					</div>
+					<div class="txt-area">
+						
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+
+	</body>
+	<script type="text/javascript">
+		(function(doc, win) {
+			var docEl = doc.documentElement,
+				resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+				recalc = function() {
+					var clientWidth = docEl.clientWidth;
+					if (!clientWidth) return;
+					docEl.style.fontSize = 20 * (clientWidth / 750) + 'px';
+				};
+			if (!doc.addEventListener) return;
+			win.addEventListener(resizeEvt, recalc, false);
+			doc.addEventListener('DOMContentLoaded', recalc, false);
+		})(document, window);
+
+		var app = new Vue({
+			el: '#app',
+			data: {
+				message: 'Hello Vue!',
+				type: 1,
+				subOne: 0,
+				subTwo: 0,
+				subThree: 0,
+				showFour: true,
+				num: 0,
+				numTxt: '',
+			},
+			methods: {
+				choose: function(type) {
+					this.type = type
+					if(type===1){
+						this.reset1()
+					} else{
+						this.reset2()
+					}
+				},
+				setOne(value) {
+					this.subOne = value;
+					if(value===1){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰:  不错的选择~' ,
+							center: true
+						});
+					}
+					if(value===2){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰:  我也不想丑，哈哈哈~' ,
+							center: true
+						});
+					}
+					if(value===3){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰:  海拔不再是槽点，哈哈哈~' ,
+							center: true
+						});
+					}
+					if(value===4){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰: 咦~这也能舍弃？' ,
+							center: true
+						});
+					}
+				},
+				setTwo(value) {
+					this.subTwo = value
+					if(value===1){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰:  可以噢~' ,
+							center: true
+						});
+					}
+					if(value===2){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰:  都行呀~' ,
+							center: true
+						});
+					}
+					if(value===3){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰: 这个可以有哦，哈哈哈哈~' ,
+							center: true
+						});
+					}
+					if(value===4){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰: 私下我觉得可以呢！' ,
+							center: true
+						});
+					}
+					
+				},
+				setThree(value) {
+					this.subThree = value
+					if(value===1){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰: 好期待~懒一下，哈哈~' ,
+							center: true
+						});
+					}
+					if(value===2){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰:  不敢动...' ,
+							center: true
+						});
+					}
+					if(value===3){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰:  由被骂咯~' ,
+							center: true
+						});
+					}
+					if(value===4){
+						this.$message({
+							type: 'success',
+							message: ' 男盆友曰:哈哈哈哈，可以可以的' ,
+							center: true
+						});
+					}
+				},
+
+				setFour(value) {
+					this.showFour = false
+					this.$message({
+						type: 'warning',
+						message: ' 男盆友曰:上当了吧，嘻嘻嘻' ,
+						center: true
+					});
+				},
+				reset1() {
+					this.subOne = 0;
+					this.subTwo = 0;
+					this.subThree = 0;
+					this.showFour = true;
+				},
+				reset2() {
+					this.num = 0;
+					this.numTxt = '';
+				},
+				showNum() {
+					var x = (Math.random() * 10).toFixed();
+					var confirmTxt = "同意";
+					var cancelTxt = "";
+					var titleTxt = "";
+
+					if (x < 2) {
+						this.numTxt = '人都是越被爱越可爱的，谢谢你喜欢我，我也喜欢你。'
+						confirmTxt = '同意到想亲你';
+						cancelTxt = '嘻嘻嘻嘻';
+						titleTxt = '下次成全你喔！嘻嘻！'
+
+					}
+					if (x >= 2 && x < 4) {
+						this.numTxt = '三天的缘好短，我想要一万倍的份。';
+						confirmTxt = '会腻的';
+						cancelTxt = '我也想要！'
+						titleTxt = '原来你是这样的人。。。'
+					}
+					if (x >= 4 && x < 6) {
+						this.numTxt = '我一向看人很准的，你这个人，一看就知道是我的人。我甚至知道你现在想啃我？'
+						confirmTxt = '对，我是想啃你好久了！';
+						cancelTxt = '你想太多...'
+						titleTxt = '哈哈哈哈哈哈~'
+					}
+					if (x >= 6 && x < 8) {
+						this.numTxt = '我兴许没有貌似潘安，你兴许也没有美若天仙，但我却依然有着如此强烈的憧憬：把我十二分的温柔都给予你，也能获取你十分的快乐与甜蜜。'
+						confirmTxt = '甜到晕倒';
+						cancelTxt = '开心到飞起'
+						titleTxt = '哈哈哈哈哈哈~'
+					}
+					if (x > 8) {
+						this.numTxt = '有所期待的屏幕前的你，可知此刻，我是多么想把你搂入怀里。'
+						confirmTxt = '被你看穿了呢！';
+						cancelTxt = '才不要~'
+						titleTxt = '我懂你！嘻嘻！'
+					}
+
+					this.num = x;
+					if (x >= 5) {
+						this.$confirm(this.numTxt, '冒险数字：' + x, {
+							confirmButtonText: confirmTxt,
+							cancelButtonText: cancelTxt,
+							type: 'success'
+						}).then(() => {
+							this.$message({
+								type: 'success',
+								message: ' 男盆友曰:  ' + titleTxt,
+								center: true
+							});
+						}).catch(() => {
+							this.$message({
+								type: 'success',
+								message: ' 男盆友曰:  咦咦咦~' ,
+								center: true
+							});
+						});
+					} else {
+						this.$alert(this.numTxt, '冒险数字：' + x, {
+							confirmButtonText: confirmTxt,
+							callback: action => {
+								this.$message({
+									type: 'success',
+									message: ' 男盆友曰:  ' + titleTxt,
+									center: true
+								});
+							}
+						});
+					}
+
+
+				}
+
+
+			}
+		})
+	</script>
+</html>
